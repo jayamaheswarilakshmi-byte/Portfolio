@@ -28,7 +28,7 @@ SECRET_KEY = os.getenv(
     "django-insecure-development-key"
 )
 
-DEBUG = os.getenv("DEBUG", "False") == "True"
+DEBUG = os.getenv("DEBUG", "True") == "True"
 
 ALLOWED_HOSTS = [
     "127.0.0.1",
@@ -43,7 +43,7 @@ CSRF_TRUSTED_ORIGINS = [
 # --------------------------------------------------
 
 INSTALLED_APPS = [
-
+"cloudinary_storage",
     # Django default apps
     "django.contrib.admin",
     "django.contrib.auth",
@@ -51,7 +51,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-
+"cloudinary",
     # Our application
     "portfolio",
 ]
@@ -133,13 +133,11 @@ DATABASES = {
 }
 
 if os.getenv("DATABASE_URL"):
-   
-
     DATABASES["default"] = dj_database_url.config(
         default=os.getenv("DATABASE_URL"),
         conn_max_age=600,
+        ssl_require=True,  # Enables SSL required by Render PostgreSQL
     )
-# --------------------------------------------------
 # PASSWORD VALIDATION
 # --------------------------------------------------
 
