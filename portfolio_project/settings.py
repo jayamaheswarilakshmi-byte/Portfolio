@@ -2,6 +2,7 @@ from pathlib import Path
 import os
 from dotenv import load_dotenv
 import dj_database_url
+import cloudinary
 
 
 # --------------------------------------------------
@@ -197,6 +198,18 @@ STATICFILES_DIRS = [
 ]
 
 STATIC_ROOT = BASE_DIR / "staticfiles"
+cloudinary.config(
+    cloud_name=os.getenv("CLOUDINARY_CLOUD_NAME"),
+    api_key=os.getenv("CLOUDINARY_API_KEY"),
+    api_secret=os.getenv("CLOUDINARY_API_SECRET"),
+)
+
+CLOUDINARY_STORAGE = {
+    "CLOUD_NAME": os.getenv("CLOUDINARY_CLOUD_NAME"),
+    "API_KEY": os.getenv("CLOUDINARY_API_KEY"),
+    "API_SECRET": os.getenv("CLOUDINARY_API_SECRET"),
+}
+
 STORAGES = {
     "default": {
         "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
@@ -205,19 +218,6 @@ STORAGES = {
         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
     },
 }
-CLOUDINARY_STORAGE = {
-    "CLOUD_NAME": os.getenv("CLOUDINARY_CLOUD_NAME"),
-    "API_KEY": os.getenv("CLOUDINARY_API_KEY"),
-    "API_SECRET": os.getenv("CLOUDINARY_API_SECRET"),
-}
-print("CLOUDINARY CLOUD NAME:", os.getenv("CLOUDINARY_CLOUD_NAME"))
-print("CLOUDINARY API KEY SET:", bool(os.getenv("CLOUDINARY_API_KEY")))
-print("CLOUDINARY SECRET SET:", bool(os.getenv("CLOUDINARY_API_SECRET")))
-CLOUDINARY_URL = (
-    f"cloudinary://{os.getenv('CLOUDINARY_API_KEY')}:"
-    f"{os.getenv('CLOUDINARY_API_SECRET')}@"
-    f"{os.getenv('CLOUDINARY_CLOUD_NAME')}"
-)
 
 # --------------------------------------------------
 # MEDIA FILES
