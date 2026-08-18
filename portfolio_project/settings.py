@@ -34,6 +34,9 @@ ALLOWED_HOSTS = [
     "localhost",
     ".onrender.com"
 ]
+CSRF_TRUSTED_ORIGINS = [
+    "https://*.onrender.com",
+]
 # --------------------------------------------------
 # APPLICATIONS
 # --------------------------------------------------
