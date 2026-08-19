@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ profile.name|default:"Jayalakshmi Subramanian" }} | Portfolio</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Typed.js for Motion Text -->
+    <script src="https://unpkg.com/typed.js@2.1.0/dist/typed.umd.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        coral: '#ff6b6b',
+                        themeYellow: '#f0d065',
+                        darkSidebar: '#222222',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Skill Bar Motion */
+        @keyframes fillBar {
+            from { width: 0%; }
+            to { width: var(--target-width); }
+        }
+        .skill-progress-bg {
+            width: 100%;
+            height: 4px;
+            background-color: #e5e7eb;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+        .skill-progress-fill {
+            height: 100%;
+            background-color: #ff6b6b;
+            border-radius: 2px;
+            width: 0%;
+        }
+        .animate-skill .skill-progress-fill {
+            animation: fillBar 1.8s ease-out forwards;
+        }
+
+        /* Timeline Line Animations */
+        @keyframes growDown {
+            from { height: 0%; }
+            to { height: 100%; }
+        }
+        @keyframes growRight {
+            from { width: 0%; }
+            to { width: 100%; }
+        }
+
+        .timeline-vertical-line {
+            height: 0%;
+            transition: height 1.2s ease-out;
+        }
+        .animate-timeline .timeline-vertical-line {
+            animation: growDown 1.2s ease-out forwards;
+        }
+
+        .timeline-divider {
+            width: 0%;
+            transition: width 1s ease-out;
+        }
+        .animate-timeline .timeline-divider {
+            animation: growRight 1s ease-out 0.5s forwards;
+        }
+    </style>
+</head>
+<body class="bg-themeYellow font-sans antialiased min-h-screen">
+
+    <!-- FIXED LEFT SIDEBAR -->
+    <aside class="fixed top-0 left-0 h-screen w-72 bg-darkSidebar text-white flex flex-col justify-between z-50 overflow-y-auto">
+        <div>
+            <!-- Profile Image Header -->
+            <div class="w-full h-72 bg-gray-800 overflow-hidden relative">
+                {% if profile and profile.profile_image %}
+                    <img src="{{ profile.profile_image.url }}" alt="{{ profile.name }}" class="w-full h-full object-cover">
+                {% else %}
+                    <div class="w-full h-full flex items-center justify-center bg-gray-700 text-gray-400">
+                        <i class="fa-solid fa-user text-6xl"></i>
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Navigation Links -->
+            <nav class="text-sm">
+                <a href="#home" class="flex items-center justify-between px-6 py-3.5 border-b border-gray-800 text-coral hover:bg-gray-800 transition">
+                    <span>Home</span> <i class="fa-solid fa-house"></i>
+                </a>
+                <a href="#about" class="flex items-center justify-between px-6 py-3.5 border-b border-gray-800 text-gray-300 hover:text-coral hover:bg-gray-800 transition">
+                    <span>About</span> <i class="fa-solid fa-address-card"></i>
+                </a>
+                <a href="#education" class="flex items-center justify-between px-6 py-3.5 border-b border-gray-800 text-gray-300 hover:text-coral hover:bg-gray-800 transition">
+                    <span>Education</span> <i class="fa-solid fa-graduation-cap"></i>
+                </a>
+                <a href="#experience" class="flex items-center justify-between px-6 py-3.5 border-b border-gray-800 text-gray-300 hover:text-coral hover:bg-gray-800 transition">
+                    <span>Experience</span> <i class="fa-solid fa-star"></i>
+                </a>
+                <a href="#service" class="flex items-center justify-between px-6 py-3.5 border-b border-gray-800 text-gray-300 hover:text-coral hover:bg-gray-800 transition">
+                    <span>Service</span> <i class="fa-solid fa-bars-staggered"></i>
+                </a>
+                <a href="#portfolio" class="flex items-center justify-between px-6 py-3.5 border-b border-gray-800 text-gray-300 hover:text-coral hover:bg-gray-800 transition">
+                    <span>Portfolio</span> <i class="fa-solid fa-briefcase"></i>
+                </a>
+                <a href="#ai-agent" class="flex items-center justify-between px-6 py-3.5 border-b border-gray-800 text-gray-300 hover:text-coral hover:bg-gray-800 transition">
+                    <span>AI Agent</span> <i class="fa-solid fa-robot"></i>
+                </a>
+                <a href="#contact" class="flex items-center justify-between px-6 py-3.5 border-b border-gray-800 text-gray-300 hover:text-coral hover:bg-gray-800 transition">
+                    <span>Contact</span> <i class="fa-solid fa-envelope"></i>
+                </a>
+            </nav>
+        </div>
+
+        <!-- Social Icon Footer -->
+        <div class="p-6 flex gap-2">
+            <a href="https://linkedin.com/in/jaya-lakshmi-651144310/" target="_blank" class="bg-coral text-white w-8 h-8 flex items-center justify-center rounded-sm hover:opacity-90 transition">
+                <i class="fa-brands fa-linkedin-in text-xs"></i>
+            </a>
+            <a href="https://github.com/jayamaheswarilakshmi-byte/" target="_blank" class="bg-coral text-white w-8 h-8 flex items-center justify-center rounded-sm hover:opacity-90 transition">
+                <i class="fa-brands fa-github text-xs"></i>
+            </a>
+            <a href="mailto:{{ profile.email|default:'jaya.maheswari.lakshmi@gmail.com' }}" class="bg-coral text-white w-8 h-8 flex items-center justify-center rounded-sm hover:opacity-90 transition">
+                <i class="fa-solid fa-envelope text-xs"></i>
+            </a>
+        </div>
+    </aside>
+
+    <!-- MAIN SCROLLABLE CONTENT AREA -->
+    <main class="ml-72 p-6 md:p-8 space-y-8 max-w-6xl">
+
+        <!-- 1. HERO CARD -->
+        <section id="home" class="bg-white shadow-md p-8 md:p-10 space-y-8">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                <div class="space-y-3">
+                    <p class="text-coral font-medium text-lg">I'm</p>
+                    <h1 class="text-4xl md:text-5xl font-extrabold text-gray-800 tracking-tight">
+                        {{ profile.name|default:"Jayalakshmi Subramanian" }}
+                    </h1>
+                    <p class="text-gray-500 text-xl font-light h-8 flex items-center">
+                        <span id="typed-designation" class="text-gray-600 font-medium"></span>
+                    </p>
+                </div>
+                {% if profile and profile.hero_image %}
+                <div class="w-56 h-64 overflow-hidden shrink-0">
+                    <img src="{{ profile.hero_image.url }}" alt="{{ profile.name }}" class="w-full h-full object-cover">
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- HERO BUTTONS -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-0 text-white font-semibold pt-4">
+                {% if profile and profile.resume_file %}
+                <a href="{{ profile.resume_file.url }}" target="_blank" class="bg-[#212529] py-3.5 px-6 text-center hover:bg-black transition flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-download text-coral"></i> Resume
+                </a>
+                {% else %}
+                <a href="#" class="bg-[#212529] py-3.5 px-6 text-center hover:bg-black transition flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-download text-coral"></i> Resume
+                </a>
+                {% endif %}
+                <a href="#contact" class="bg-coral py-3.5 px-6 text-center hover:opacity-90 transition flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-handshake"></i> Hire Me
+                </a>
+            </div>
+        </section>
+
+        <!-- 2. ABOUT ME CARD -->
+        <section id="about" class="bg-white shadow-md p-8 md:p-10 space-y-8">
+            <div>
+                <h2 class="text-3xl font-bold text-gray-800">About Me</h2>
+                <div class="w-12 h-1 bg-coral mt-1 mb-6"></div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
+                    {% if profile and profile.about_image %}
+                    <div class="w-full h-64 overflow-hidden shadow-sm">
+                        <img src="{{ profile.about_image.url }}" alt="{{ profile.name }}" class="w-full h-full object-cover">
+                    </div>
+                    {% endif %}
+                    
+                    <div class="{% if profile and profile.profile_image %}md:col-span-2{% else %}md:col-span-3{% endif %} space-y-4">
+                        <p class="text-gray-600 leading-relaxed text-sm md:text-base">
+                            {{ profile.about_text|default:"Enthusiastic and detail-oriented Python Full Stack Developer with hands-on training and practical experience in HTML, CSS, JavaScript, Python, Django, React, and SQL. Experienced in developing CRUD-based, database-driven, and responsive web applications with a continuous-learning mindset." }}
+                        </p>
+                        <a href="#contact" class="inline-block bg-coral text-white text-xs font-semibold px-6 py-2.5 rounded-sm hover:opacity-90 transition">
+                            Hire Me
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Motion Skill Bars -->
+            <div id="skills-container" class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-gray-100">
+                <div>
+                    <div class="flex justify-between mb-1 text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                        <span>Python & Django</span>
+                        <span>90%</span>
+                    </div>
+                    <div class="skill-progress-bg"><div class="skill-progress-fill" style="--target-width: 90%;"></div></div>
+                </div>
+                <div>
+                    <div class="flex justify-between mb-1 text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                        <span>React & Frontend</span>
+                        <span>85%</span>
+                    </div>
+                    <div class="skill-progress-bg"><div class="skill-progress-fill" style="--target-width: 85%;"></div></div>
+                </div>
+                <div>
+                    <div class="flex justify-between mb-1 text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                        <span>SQL / Database</span>
+                        <span>80%</span>
+                    </div>
+                    <div class="skill-progress-bg"><div class="skill-progress-fill" style="--target-width: 80%;"></div></div>
+                </div>
+                <div>
+                    <div class="flex justify-between mb-1 text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                        <span>Git & Deployment</span>
+                        <span>85%</span>
+                    </div>
+                    <div class="skill-progress-bg"><div class="skill-progress-fill" style="--target-width: 85%;"></div></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. EDUCATION CARD WITH MOTION TIMELINE -->
+        <section id="education" class="timeline-section bg-white shadow-md p-8 md:p-10 space-y-6">
+            <h2 class="text-3xl font-bold text-gray-800">Education</h2>
+            <div class="w-12 h-1 bg-coral mb-6"></div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 relative">
+                <!-- Left Education Item -->
+                <div class="relative pl-6 space-y-2">
+                    <div class="absolute left-0 top-0 bottom-0 w-0.5 bg-gray-200 overflow-hidden">
+                        <div class="timeline-vertical-line bg-coral w-full"></div>
+                    </div>
+                    <div class="absolute -left-[5px] top-1.5 w-3 h-3 bg-coral rounded-full shadow-sm"></div>
+                    <p class="text-xs text-gray-400">01-Jun-2008 <span class="text-coral italic">to</span> 31-May-2012</p>
+                    <h3 class="text-lg font-bold text-gray-700">B.E. — Computer Science</h3>
+                    <p class="text-xs font-semibold text-coral">SCAD College of Engineering and Technology</p>
+                    <p class="text-xs text-gray-500 leading-relaxed">Graduated with foundational expertise in core software engineering, data structures, algorithms, and computing fundamentals.</p>
+                    <div class="timeline-divider h-[1px] bg-coral mt-4"></div>
+                </div>
+
+                <!-- Right Education Item -->
+                <div class="relative pl-6 space-y-2">
+                    <div class="absolute left-0 top-0 bottom-0 w-0.5 bg-gray-200 overflow-hidden">
+                        <div class="timeline-vertical-line bg-coral w-full"></div>
+                    </div>
+                    <div class="absolute -left-[5px] top-1.5 w-3 h-3 bg-coral rounded-full shadow-sm"></div>
+                    <p class="text-xs text-gray-400">06-May-2026 <span class="text-coral italic">to</span> Present</p>
+                    <h3 class="text-lg font-bold text-gray-700">Python Full Stack</h3>
+                    <p class="text-xs font-semibold text-coral">Vetri Technology Solutions</p>
+                    <p class="text-xs text-gray-500 leading-relaxed">Hands-on practical training in Django web development, React integration, REST APIs, and production deployment.</p>
+                    <div class="timeline-divider h-[1px] bg-coral mt-4"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. EXPERIENCE CARD WITH MOTION TIMELINE -->
+        <section id="experience" class="timeline-section bg-white shadow-md p-8 md:p-10 space-y-6">
+            <h2 class="text-3xl font-bold text-gray-800">Experience</h2>
+            <div class="w-12 h-1 bg-coral mb-6"></div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 relative">
+                <!-- Left Experience Item -->
+                <div class="relative pl-6 space-y-2">
+                    <div class="absolute left-0 top-0 bottom-0 w-0.5 bg-gray-200 overflow-hidden">
+                        <div class="timeline-vertical-line bg-coral w-full"></div>
+                    </div>
+                    <div class="absolute -left-[5px] top-1.5 w-3 h-3 bg-coral rounded-full shadow-sm"></div>
+                    <p class="text-xs text-gray-400">Recent <span class="text-coral italic">to</span> Present</p>
+                    <h3 class="text-lg font-bold text-gray-700">Vetri Technology Solutions</h3>
+                    <p class="text-xs italic text-gray-500">Tirunelveli, India</p>
+                    <p class="text-xs font-semibold text-gray-800">Python Full Stack Developer Intern</p>
+                    <p class="text-xs text-gray-500 leading-relaxed">Developed responsive, database-driven web applications with Django and React. Practiced CRUD modules, models, migrations, and Render deployments.</p>
+                    <div class="timeline-divider h-[1px] bg-coral mt-4"></div>
+                </div>
+
+                <!-- Right Experience Item -->
+                <div class="relative pl-6 space-y-2">
+                    <div class="absolute left-0 top-0 bottom-0 w-0.5 bg-gray-200 overflow-hidden">
+                        <div class="timeline-vertical-line bg-coral w-full"></div>
+                    </div>
+                    <div class="absolute -left-[5px] top-1.5 w-3 h-3 bg-coral rounded-full shadow-sm"></div>
+                    <p class="text-xs text-gray-400">Prior Role</p>
+                    <h3 class="text-lg font-bold text-gray-700">iTech India Private Limited</h3>
+                    <p class="text-xs italic text-gray-500">Chennai, India</p>
+                    <p class="text-xs font-semibold text-gray-800">Team Lead / Data Entry Operator</p>
+                    <p class="text-xs text-gray-500 leading-relaxed">Managed data verification tasks and led a 10-member team supporting task allocation, workflow tracking, and execution.</p>
+                    <div class="timeline-divider h-[1px] bg-coral mt-4"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. SERVICE CARD -->
+        <section id="service" class="bg-white shadow-md p-8 md:p-10 space-y-6">
+            <h2 class="text-3xl font-bold text-gray-800">Service</h2>
+            <div class="w-12 h-1 bg-coral mb-6"></div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="space-y-2">
+                    <i class="fa-solid fa-desktop text-3xl text-coral"></i>
+                    <h3 class="text-lg font-bold text-gray-700">Web Design</h3>
+                    <p class="text-xs text-gray-500 leading-relaxed">Building clean, responsive, and mobile-friendly front-end user interfaces using HTML5, CSS3, Tailwind CSS, and JavaScript.</p>
+                </div>
+
+                <div class="space-y-2">
+                    <i class="fa-solid fa-laptop-code text-3xl text-coral"></i>
+                    <h3 class="text-lg font-bold text-gray-700">Web Development</h3>
+                    <p class="text-xs text-gray-500 leading-relaxed">Developing robust backend APIs and database-driven web applications powered by Python, Django, and SQL databases.</p>
+                </div>
+
+                <div class="space-y-2">
+                    <i class="fa-solid fa-database text-3xl text-coral"></i>
+                    <h3 class="text-lg font-bold text-gray-700">Database Solutions</h3>
+                    <p class="text-xs text-gray-500 leading-relaxed">Designing database schemas, complex SQL queries, CRUD modules, authentication workflows, and system integrations.</p>
+                </div>
+
+                <div class="space-y-2">
+                    <i class="fa-solid fa-cloud-arrow-up text-3xl text-coral"></i>
+                    <h3 class="text-lg font-bold text-gray-700">Deployment & DevOps</h3>
+                    <p class="text-xs text-gray-500 leading-relaxed">Managing source control with Git/GitHub, configuring production settings, static assets, and deploying applications on Render.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. PORTFOLIO CARD -->
+        <section id="portfolio" class="bg-white shadow-md p-8 md:p-10 space-y-6">
+            <h2 class="text-3xl font-bold text-gray-800">Portfolio</h2>
+            <div class="w-12 h-1 bg-coral mb-6"></div>
+
+            <div class="flex gap-1 text-xs uppercase tracking-wider font-semibold mb-6 border border-gray-200 inline-flex">
+                <button class="bg-coral text-white px-4 py-2">All</button>
+                <button class="px-4 py-2 text-gray-600 hover:text-coral transition">Django</button>
+                <button class="px-4 py-2 text-gray-600 hover:text-coral transition">React</button>
+                <button class="px-4 py-2 text-gray-600 hover:text-coral transition">SQL</button>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                <div class="border border-gray-200 p-4 space-y-2 hover:border-coral transition">
+                    <h3 class="font-bold text-gray-800 text-sm">eCommerce / Food Flow</h3>
+                    <p class="text-xs text-coral font-medium">Django & React</p>
+                    <p class="text-xs text-gray-500">Cart checkout, authentication, order modules, and browser storage integration.</p>
+                </div>
+
+                <div class="border border-gray-200 p-4 space-y-2 hover:border-coral transition">
+                    <h3 class="font-bold text-gray-800 text-sm">Leave Management System</h3>
+                    <p class="text-xs text-coral font-medium">Django & Render</p>
+                    <p class="text-xs text-gray-500">Database-driven leave workflows, static files handling, and cloud deployment.</p>
+                </div>
+
+                <div class="border border-gray-200 p-4 space-y-2 hover:border-coral transition">
+                    <h3 class="font-bold text-gray-800 text-sm">Student Management System</h3>
+                    <p class="text-xs text-coral font-medium">Django & SQLite</p>
+                    <p class="text-xs text-gray-500">Complete CRUD operations, models, custom Django forms, and dynamic templates.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- AI AGENT SECTION -->
+<section id="ai-agent" class="bg-white shadow-md p-8 md:p-10 space-y-6 border-l-4 border-coral">
+    <!-- Header with Avatar -->
+    <div class="flex items-center space-x-4">
+        <img id="avatar-img" src="{{ profile.profile_image.url }}" alt="AI Avatar" class="w-16 h-16 rounded-full border-2 border-coral animate-pulse cursor-pointer object-cover" onclick="speakText('Please place your question here.')">
+        <div>
+            <h2 class="text-3xl font-bold text-gray-800">Ask My AI Agent</h2>
+            <p id="ai-instruction" class="text-xs text-coral font-semibold mt-1">Click the mic or speak your question!</p>
+        </div>
+    </div>
+
+    <!-- Text Input -->
+    <textarea id="user-input" rows="3" placeholder="e.g., What experience does Jayalakshmi have with Django and React?" class="w-full text-sm p-3 border border-gray-300 rounded-sm focus:outline-none focus:border-coral resize-none" required></textarea>
+
+    <!-- Controls (Orange / Coral Theme) -->
+    <div class="flex items-center gap-3">
+        <button id="mic-btn" type="button" class="flex items-center gap-2 bg-coral/10 text-coral border border-coral/30 px-5 py-2.5 rounded-sm hover:bg-coral/20 transition text-xs font-semibold">
+            <span id="mic-icon">🎙️</span> <span id="mic-text">Speak</span>
+        </button>
+        <button id="send-btn" type="button" class="flex-1 bg-coral text-white py-2.5 px-6 font-semibold text-xs rounded-sm hover:opacity-90 transition flex items-center justify-center gap-2">
+            <i class="fa-solid fa-paper-plane"></i> Ask AI
+        </button>
+    </div>
+
+    <!-- AI Output Box -->
+    <div id="ai-response-box" class="hidden p-4 bg-gray-50 border border-gray-200 rounded-sm text-xs text-gray-700">
+        <strong class="text-gray-900 uppercase tracking-wider text-[10px]">AI Response:</strong>
+        <p id="ai-response-text" class="mt-1 leading-relaxed text-gray-800">Waiting for your question...</p>
+    </div>
+</section>
+
+        <!-- 8. CONTACT CARD -->
+        <section id="contact" class="bg-white shadow-md p-8 md:p-10 space-y-6">
+            <h2 class="text-3xl font-bold text-gray-800">Contact</h2>
+            <div class="w-12 h-1 bg-coral mb-6"></div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="space-y-4 text-xs md:text-sm text-gray-700">
+                    <div class="flex items-center gap-3">
+                        <i class="fa-solid fa-user text-coral w-4"></i>
+                        <span class="font-bold">{{ profile.name|default:"Jayalakshmi Subramanian" }}</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <i class="fa-solid fa-tag text-coral w-4"></i>
+                        <span class="font-bold">Python Full Stack Developer</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <i class="fa-solid fa-envelope text-coral w-4"></i>
+                        <a href="mailto:{{ profile.email|default:'jaya.maheswari.lakshmi@gmail.com' }}" class="hover:underline">
+                            {{ profile.email|default:"jaya.maheswari.lakshmi@gmail.com" }}
+                        </a>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <i class="fa-solid fa-phone text-coral w-4"></i>
+                        <span>{{ profile.phone|default:"+91 7290994490" }}</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <i class="fa-solid fa-location-dot text-coral w-4"></i>
+                        <span>{{ profile.address|default:"Chennai, Tamil Nadu, India" }}</span>
+                    </div>
+
+                    <div class="flex gap-2 pt-2">
+                        <a href="https://linkedin.com/in/jaya-lakshmi-651144310/" target="_blank" class="bg-coral text-white w-8 h-8 flex items-center justify-center rounded-sm hover:opacity-90">
+                            <i class="fa-brands fa-linkedin-in text-xs"></i>
+                        </a>
+                        <a href="https://github.com/jayamaheswarilakshmi-byte/" target="_blank" class="bg-coral text-white w-8 h-8 flex items-center justify-center rounded-sm hover:opacity-90">
+                            <i class="fa-brands fa-github text-xs"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <form method="POST" action="{% url 'home' %}" class="space-y-3">
+                    {% csrf_token %}
+                    <div class="grid grid-cols-2 gap-3">
+                        <input type="text" name="name" placeholder="Your Name" class="border border-gray-300 p-2.5 text-xs w-full focus:outline-none focus:border-coral" required>
+                        <input type="email" name="email" placeholder="Your Email" class="border border-gray-300 p-2.5 text-xs w-full focus:outline-none focus:border-coral" required>
+                    </div>
+                    <input type="text" name="subject" placeholder="Subject" class="border border-gray-300 p-2.5 text-xs w-full focus:outline-none focus:border-coral" required>
+                    <textarea name="message" rows="4" placeholder="Message" class="border border-gray-300 p-2.5 text-xs w-full focus:outline-none focus:border-coral resize-none" required></textarea>
+                    <button type="submit" class="bg-coral text-white px-6 py-2.5 text-xs font-semibold hover:opacity-90 transition">
+                        Send Message
+                    </button>
+                </form>
+            </div>
+        </section>
+
+        <!-- FOOTER COPYRIGHT -->
+        <footer class="flex flex-col sm:flex-row justify-between items-center text-xs text-gray-700 py-4 px-2">
+            <p>© Copyright <span class="text-coral font-bold">Jayalakshmi Subramanian</span>. All Rights Reserved</p>
+            <p>Powered by <span class="text-coral font-bold">Django & Tailwind CSS</span></p>
+        </footer>
+
+    </main>
+
+    <!-- SCRIPTS -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Typed.js Animation
+            new Typed('#typed-designation', {
+                strings: [
+                    'Python Full Stack Developer',
+                    'Django Specialist',
+                    'React & Database Developer'
+                ],
+                typeSpeed: 60,
+                backSpeed: 40,
+                backDelay: 1600,
+                loop: true
+            });
+
+            // Intersection Observer for Scroll Motion Animations
+            const observerOptions = { threshold: 0.25 };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        if (entry.target.classList.contains('timeline-section')) {
+                            entry.target.classList.add('animate-timeline');
+                        }
+                        if (entry.target.id === 'skills-container') {
+                            entry.target.classList.add('animate-skill');
+                        }
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.timeline-section, #skills-container').forEach(section => {
+                observer.observe(section);
+            });
+        });
+         // AI Agent voice
+     const micBtn = document.getElementById('mic-btn');
+    const micIcon = document.getElementById('mic-icon');
+    const micText = document.getElementById('mic-text');
+    const sendBtn = document.getElementById('send-btn');
+    const userInput = document.getElementById('user-input');
+    const responseBox = document.getElementById('ai-response-box');
+    const responseText = document.getElementById('ai-response-text');
+    const avatarImg = document.getElementById('avatar-img');
+
+    // 1. Text-to-Speech (Updated for Female Voice)
+    function speakText(text) {
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel(); // Stop active speech
+
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.rate = 1.0;
+            utterance.pitch = 1.2; // Slightly higher pitch for a natural female tone
+
+            // Fetch available voices
+            const voices = window.speechSynthesis.getVoices();
+
+            // Search for common female voices across Windows, Mac, Chrome, and iOS
+            const femaleVoice = voices.find(voice => 
+                voice.name.includes('Google UK English Female') ||
+                voice.name.includes('Google US English') ||
+                voice.name.includes('Samantha') ||
+                voice.name.includes('Zira') ||
+                voice.name.includes('Victoria') ||
+                voice.name.toLowerCase().includes('female')
+            );
+
+            if (femaleVoice) {
+                utterance.voice = femaleVoice;
+            }
+
+            utterance.onstart = () => {
+                avatarImg.classList.add('animate-bounce');
+                avatarImg.classList.remove('animate-pulse');
+            };
+
+            utterance.onend = () => {
+                avatarImg.classList.remove('animate-bounce');
+                avatarImg.classList.add('animate-pulse');
+            };
+
+            window.speechSynthesis.speak(utterance);
+        }
+    }
+
+    // Ensure voices are loaded (Chrome loads voices asynchronously)
+    if ('speechSynthesis' in window) {
+        window.speechSynthesis.onvoiceschanged = () => {
+            window.speechSynthesis.getVoices();
+        };
+    }
+
+    // 2. Speech-to-Text (Audio Input)
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    if (SpeechRecognition) {
+        const recognition = new SpeechRecognition();
+        recognition.continuous = false;
+        recognition.lang = 'en-US';
+
+        micBtn.addEventListener('click', () => {
+            recognition.start();
+        });
+
+        recognition.onstart = () => {
+            micIcon.innerText = "🔴";
+            micText.innerText = "Listening...";
+        };
+
+        recognition.onresult = (event) => {
+            const transcript = event.results[0][0].transcript;
+            userInput.value = transcript;
+            micIcon.innerText = "🎙️";
+            micText.innerText = "Speak";
+            sendMessage(transcript);
+        };
+
+        recognition.onerror = () => {
+            micIcon.innerText = "🎙️";
+            micText.innerText = "Speak";
+        };
+
+        recognition.onend = () => {
+            micIcon.innerText = "🎙️";
+            micText.innerText = "Speak";
+        };
+    } else {
+        micBtn.style.display = 'none';
+    }
+
+    // 3. API Handler
+    async function sendMessage(messageOverride) {
+        const query = messageOverride || userInput.value;
+        if (!query.trim()) return;
+
+        responseBox.classList.remove('hidden');
+        responseText.innerText = "Thinking...";
+
+        try {
+            const response = await fetch('/api/ai-chat/', {
+                method: 'POST',
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({ message: query })
+            });
+
+            const data = await response.json();
+            const reply = data.reply || data.error;
+
+            responseText.innerText = reply;
+            speakText(reply);
+        } catch (err) {
+            responseText.innerText = "Error connecting to AI backend.";
+        }
+    }
+
+    sendBtn.addEventListener('click', () => sendMessage());
+        // AI Agent Form AJAX
+        document.getElementById('ai-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const queryInput = document.getElementById('ai-query');
+            const responseBox = document.getElementById('ai-response-box');
+            const responseText = document.getElementById('ai-response-text');
+            const btn = document.getElementById('ai-btn');
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Thinking...';
+
+            try {
+                const res = await fetch("{% url 'ai_chat_api' %}", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ message: queryInput.value })
+                });
+                const data = await res.json();
+                
+                responseBox.classList.remove('hidden');
+                if (data.reply) {
+                    responseText.innerText = data.reply;
+                } else {
+                    responseText.innerText = data.error || 'Something went wrong.';
+                }
+            } catch (err) {
+                responseBox.classList.remove('hidden');
+                responseText.innerText = 'Unable to connect to AI server.';
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Ask AI';
+            }
+        });
+    </script>
+</body>
+</html>

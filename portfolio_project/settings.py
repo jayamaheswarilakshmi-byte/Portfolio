@@ -28,7 +28,7 @@ SECRET_KEY = os.getenv(
     "django-insecure-development-key"
 )
 
-DEBUG = os.getenv("DEBUG", "True") == "True"
+DEBUG = os.getenv("DEBUG", "False") == "True"
 
 ALLOWED_HOSTS = [
     "127.0.0.1",
@@ -238,15 +238,12 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # --------------------------------------------------
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-
 EMAIL_HOST = "smtp.gmail.com"
-
 EMAIL_PORT = 587
-
 EMAIL_USE_TLS = True
 
+# Read the keys from your .env file
 EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
-
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
 
-DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+DEFAULT_FROM_EMAIL = 'Jayalakshmi Portfolio <jaya.maheswari.lakshmi@gmail.com>'

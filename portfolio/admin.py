@@ -1,16 +1,15 @@
+import traceback
 from django.contrib import admin
 from django.core.exceptions import ValidationError
-import traceback
 
-from .models import Profile
+from .models import ContactMessage, Experience, Profile, Project, Service, Skill
 
 
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
-
     list_display = (
         "name",
-        "designation",
+        "title",
         "email",
         "phone",
     )
@@ -24,4 +23,32 @@ class ProfileAdmin(admin.ModelAdmin):
             print(str(e))
             traceback.print_exc()
             print("===== END CLOUDINARY UPLOAD ERROR =====")
-            raise
+            raise e
+
+
+@admin.register(ContactMessage)
+class ContactMessageAdmin(admin.ModelAdmin):
+    list_display = ("name", "email", "subject", "created_at")
+    list_filter = ("created_at",)
+    search_fields = ("name", "email", "subject", "message")
+    readonly_fields = ("name", "email", "subject", "message", "created_at")
+
+
+# Optional: Register your remaining portfolio models
+@admin.register(Skill)
+class SkillAdmin(admin.ModelAdmin):
+    list_display = ("name",)
+
+
+@admin.register(Experience)
+class ExperienceAdmin(admin.ModelAdmin):
+    list_display = ("role", "company", "start_date", "end_date")
+
+@admin.register(Service)
+class ServiceAdmin(admin.ModelAdmin):
+    list_display = ("title",)
+
+
+@admin.register(Project)
+class ProjectAdmin(admin.ModelAdmin):
+    list_display = ("title",)
