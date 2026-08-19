@@ -368,7 +368,11 @@
 <section id="ai-agent" class="bg-white shadow-md p-8 md:p-10 space-y-6 border-l-4 border-coral">
     <!-- Header with Avatar -->
     <div class="flex items-center space-x-4">
+        {% if profile and profile.profile_image %}
         <img id="avatar-img" src="{{ profile.profile_image.url }}" alt="AI Avatar" class="w-16 h-16 rounded-full border-2 border-coral animate-pulse cursor-pointer object-cover" onclick="speakText('Please place your question here.')">
+        {% else %}
+        <img id="avatar-img" src="https://via.placeholder.com/150" alt="AI Avatar" class="w-16 h-16 rounded-full border-2 border-coral animate-pulse cursor-pointer object-cover" onclick="speakText('Please place your question here.')">
+{% endif %}
         <div>
             <h2 class="text-3xl font-bold text-gray-800">Ask My AI Agent</h2>
             <p id="ai-instruction" class="text-xs text-coral font-semibold mt-1">Click the mic or speak your question!</p>
@@ -458,10 +462,12 @@
 
     </main>
 
-    <!-- SCRIPTS -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // Typed.js Animation
+    <!-- SCRIPTS --><script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // -------------------------------------------------------------
+        // 1. Typed.js Animation
+        // -------------------------------------------------------------
+        if (typeof Typed !== 'undefined' && document.getElementById('typed-designation')) {
             new Typed('#typed-designation', {
                 strings: [
                     'Python Full Stack Developer',
@@ -473,184 +479,208 @@
                 backDelay: 1600,
                 loop: true
             });
+        }
 
-            // Intersection Observer for Scroll Motion Animations
-            const observerOptions = { threshold: 0.25 };
+        // -------------------------------------------------------------
+        // 2. Intersection Observer for Scroll Motion Animations
+        // -------------------------------------------------------------
+        const observerOptions = { threshold: 0.25 };
 
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        if (entry.target.classList.contains('timeline-section')) {
-                            entry.target.classList.add('animate-timeline');
-                        }
-                        if (entry.target.id === 'skills-container') {
-                            entry.target.classList.add('animate-skill');
-                        }
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    if (entry.target.classList.contains('timeline-section')) {
+                        entry.target.classList.add('animate-timeline');
                     }
-                });
-            }, observerOptions);
-
-            document.querySelectorAll('.timeline-section, #skills-container').forEach(section => {
-                observer.observe(section);
+                    if (entry.target.id === 'skills-container') {
+                        entry.target.classList.add('animate-skill');
+                    }
+                }
             });
+        }, observerOptions);
+
+        document.querySelectorAll('.timeline-section, #skills-container').forEach(section => {
+            observer.observe(section);
         });
-         // AI Agent voice
-     const micBtn = document.getElementById('mic-btn');
-    const micIcon = document.getElementById('mic-icon');
-    const micText = document.getElementById('mic-text');
-    const sendBtn = document.getElementById('send-btn');
-    const userInput = document.getElementById('user-input');
-    const responseBox = document.getElementById('ai-response-box');
-    const responseText = document.getElementById('ai-response-text');
-    const avatarImg = document.getElementById('avatar-img');
 
-    // 1. Text-to-Speech (Updated for Female Voice)
-    function speakText(text) {
-        if ('speechSynthesis' in window) {
-            window.speechSynthesis.cancel(); // Stop active speech
+        // -------------------------------------------------------------
+        // 3. AI Agent Setup & DOM Elements
+        // -------------------------------------------------------------
+        const micBtn = document.getElementById('mic-btn');
+        const micIcon = document.getElementById('mic-icon');
+        const micText = document.getElementById('mic-text');
+        const sendBtn = document.getElementById('send-btn') || document.getElementById('ai-btn');
+        const userInput = document.getElementById('user-input') || document.getElementById('ai-query');
+        const responseBox = document.getElementById('ai-response-box');
+        const responseText = document.getElementById('ai-response-text');
+        const avatarImg = document.getElementById('avatar-img');
+        const aiForm = document.getElementById('ai-form');
 
-            const utterance = new SpeechSynthesisUtterance(text);
-            utterance.rate = 1.0;
-            utterance.pitch = 1.2; // Slightly higher pitch for a natural female tone
+        // -------------------------------------------------------------
+        // 4. Text-to-Speech (Female Voice + Avatar Bounce)
+        // -------------------------------------------------------------
+        function speakText(text) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel(); // Stop active speech
 
-            // Fetch available voices
-            const voices = window.speechSynthesis.getVoices();
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.rate = 1.0;
+                utterance.pitch = 1.2; // Slightly higher pitch for female tone
 
-            // Search for common female voices across Windows, Mac, Chrome, and iOS
-            const femaleVoice = voices.find(voice => 
-                voice.name.includes('Google UK English Female') ||
-                voice.name.includes('Google US English') ||
-                voice.name.includes('Samantha') ||
-                voice.name.includes('Zira') ||
-                voice.name.includes('Victoria') ||
-                voice.name.toLowerCase().includes('female')
-            );
+                const voices = window.speechSynthesis.getVoices();
 
-            if (femaleVoice) {
-                utterance.voice = femaleVoice;
+                // Search for common female voices
+                const femaleVoice = voices.find(voice => 
+                    voice.name.includes('Google UK English Female') ||
+                    voice.name.includes('Google US English') ||
+                    voice.name.includes('Samantha') ||
+                    voice.name.includes('Zira') ||
+                    voice.name.includes('Victoria') ||
+                    voice.name.toLowerCase().includes('female')
+                );
+
+                if (femaleVoice) {
+                    utterance.voice = femaleVoice;
+                }
+
+                utterance.onstart = () => {
+                    if (avatarImg) {
+                        avatarImg.classList.add('animate-bounce');
+                        avatarImg.classList.remove('animate-pulse');
+                    }
+                };
+
+                utterance.onend = () => {
+                    if (avatarImg) {
+                        avatarImg.classList.remove('animate-bounce');
+                        avatarImg.classList.add('animate-pulse');
+                    }
+                };
+
+                utterance.onerror = () => {
+                    if (avatarImg) {
+                        avatarImg.classList.remove('animate-bounce');
+                        avatarImg.classList.add('animate-pulse');
+                    }
+                };
+
+                window.speechSynthesis.speak(utterance);
             }
-
-            utterance.onstart = () => {
-                avatarImg.classList.add('animate-bounce');
-                avatarImg.classList.remove('animate-pulse');
-            };
-
-            utterance.onend = () => {
-                avatarImg.classList.remove('animate-bounce');
-                avatarImg.classList.add('animate-pulse');
-            };
-
-            window.speechSynthesis.speak(utterance);
         }
-    }
 
-    // Ensure voices are loaded (Chrome loads voices asynchronously)
-    if ('speechSynthesis' in window) {
-        window.speechSynthesis.onvoiceschanged = () => {
-            window.speechSynthesis.getVoices();
-        };
-    }
+        // Ensure voices load asynchronously on Chrome/Edge
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.onvoiceschanged = () => {
+                window.speechSynthesis.getVoices();
+            };
+        }
 
-    // 2. Speech-to-Text (Audio Input)
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        // Direct Avatar click trigger
+        if (avatarImg) {
+            avatarImg.addEventListener('click', () => {
+                speakText('Please place your question here.');
+            });
+        }
 
-    if (SpeechRecognition) {
-        const recognition = new SpeechRecognition();
-        recognition.continuous = false;
-        recognition.lang = 'en-US';
+        // -------------------------------------------------------------
+        // 5. Speech-to-Text (Audio Input)
+        // -------------------------------------------------------------
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
-        micBtn.addEventListener('click', () => {
-            recognition.start();
-        });
+        if (SpeechRecognition && micBtn) {
+            const recognition = new SpeechRecognition();
+            recognition.continuous = false;
+            recognition.lang = 'en-US';
 
-        recognition.onstart = () => {
-            micIcon.innerText = "🔴";
-            micText.innerText = "Listening...";
-        };
-
-        recognition.onresult = (event) => {
-            const transcript = event.results[0][0].transcript;
-            userInput.value = transcript;
-            micIcon.innerText = "🎙️";
-            micText.innerText = "Speak";
-            sendMessage(transcript);
-        };
-
-        recognition.onerror = () => {
-            micIcon.innerText = "🎙️";
-            micText.innerText = "Speak";
-        };
-
-        recognition.onend = () => {
-            micIcon.innerText = "🎙️";
-            micText.innerText = "Speak";
-        };
-    } else {
-        micBtn.style.display = 'none';
-    }
-
-    // 3. API Handler
-    async function sendMessage(messageOverride) {
-        const query = messageOverride || userInput.value;
-        if (!query.trim()) return;
-
-        responseBox.classList.remove('hidden');
-        responseText.innerText = "Thinking...";
-
-        try {
-            const response = await fetch('/api/ai-chat/', {
-                method: 'POST',
-                headers: { 
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': '{{ csrf_token }}'
-                },
-                body: JSON.stringify({ message: query })
+            micBtn.addEventListener('click', () => {
+                recognition.start();
             });
 
-            const data = await response.json();
-            const reply = data.reply || data.error;
+            recognition.onstart = () => {
+                if (micIcon) micIcon.innerText = "🔴";
+                if (micText) micText.innerText = "Listening...";
+            };
 
-            responseText.innerText = reply;
-            speakText(reply);
-        } catch (err) {
-            responseText.innerText = "Error connecting to AI backend.";
+            recognition.onresult = (event) => {
+                const transcript = event.results[0][0].transcript;
+                if (userInput) userInput.value = transcript;
+                if (micIcon) micIcon.innerText = "🎙️";
+                if (micText) micText.innerText = "Speak";
+                
+                // Automatically send recognized speech
+                sendMessage(transcript);
+            };
+
+            recognition.onerror = () => {
+                if (micIcon) micIcon.innerText = "🎙️";
+                if (micText) micText.innerText = "Speak";
+            };
+
+            recognition.onend = () => {
+                if (micIcon) micIcon.innerText = "🎙️";
+                if (micText) micText.innerText = "Speak";
+            };
+        } else if (micBtn) {
+            micBtn.style.display = 'none';
         }
-    }
 
-    sendBtn.addEventListener('click', () => sendMessage());
-        // AI Agent Form AJAX
-        document.getElementById('ai-form').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const queryInput = document.getElementById('ai-query');
-            const responseBox = document.getElementById('ai-response-box');
-            const responseText = document.getElementById('ai-response-text');
-            const btn = document.getElementById('ai-btn');
+        // -------------------------------------------------------------
+        // 6. Unified API Handler (AJAX + CSRF + UI States)
+        // -------------------------------------------------------------
+        async function sendMessage(messageOverride) {
+            const query = messageOverride || (userInput ? userInput.value : '');
+            if (!query.trim()) return;
 
-            btn.disabled = true;
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Thinking...';
+            if (responseBox) responseBox.classList.remove('hidden');
+            if (responseText) responseText.innerText = "Thinking...";
+
+            let originalBtnHTML = "";
+            if (sendBtn) {
+                sendBtn.disabled = true;
+                originalBtnHTML = sendBtn.innerHTML;
+                sendBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Thinking...';
+            }
 
             try {
-                const res = await fetch("{% url 'ai_chat_api' %}", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ message: queryInput.value })
+                const response = await fetch("{% url 'ai_chat_api' %}", {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    },
+                    body: JSON.stringify({ message: query })
                 });
-                const data = await res.json();
-                
-                responseBox.classList.remove('hidden');
-                if (data.reply) {
-                    responseText.innerText = data.reply;
-                } else {
-                    responseText.innerText = data.error || 'Something went wrong.';
-                }
+
+                const data = await response.json();
+                const reply = data.reply || data.error || 'Something went wrong.';
+
+                if (responseText) responseText.innerText = reply;
+                speakText(reply);
+
+                if (userInput) userInput.value = '';
+
             } catch (err) {
-                responseBox.classList.remove('hidden');
-                responseText.innerText = 'Unable to connect to AI server.';
+                if (responseText) responseText.innerText = "Error connecting to AI backend.";
             } finally {
-                btn.disabled = false;
-                btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Ask AI';
+                if (sendBtn) {
+                    sendBtn.disabled = false;
+                    sendBtn.innerHTML = originalBtnHTML || '<i class="fa-solid fa-paper-plane"></i> Ask AI';
+                }
             }
-        });
-    </script>
+        }
+
+        // Event Listeners for form submission and button click
+        if (aiForm) {
+            aiForm.addEventListener('submit', function (e) {
+                e.preventDefault();
+                sendMessage();
+            });
+        }
+
+        if (sendBtn && !aiForm) {
+            sendBtn.addEventListener('click', () => sendMessage());
+        }
+    });
+</script>
 </body>
 </html>
