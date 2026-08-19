@@ -19,6 +19,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 load_dotenv(BASE_DIR / ".env")
 
 
+
 # --------------------------------------------------
 # SECURITY
 # --------------------------------------------------
@@ -35,9 +36,20 @@ ALLOWED_HOSTS = [
     "localhost",
     ".onrender.com"
 ]
+
+# Tell Django it's behind a proxy that handles SSL/HTTPS
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+# CSRF Trusted Origins for Render
 CSRF_TRUSTED_ORIGINS = [
-    "https://*.onrender.com",
+    'https://*.onrender.com',
 ]
+
+if not DEBUG:
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+
 # --------------------------------------------------
 # APPLICATIONS
 # --------------------------------------------------
