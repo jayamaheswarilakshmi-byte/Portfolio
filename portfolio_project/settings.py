@@ -53,18 +53,20 @@ if not DEBUG:
 # --------------------------------------------------
 # APPLICATIONS
 # --------------------------------------------------
-
 INSTALLED_APPS = [
-"cloudinary_storage",
-    # Django default apps
+    # Core Django apps
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
-    "django.contrib.staticfiles",
-"cloudinary",
-    # Our application
+    "django.contrib.staticfiles",  # Keep staticfiles FIRST for WhiteNoise
+
+    # Cloudinary apps for Media only
+    "cloudinary_storage",
+    "cloudinary",
+
+    # Your application
     "portfolio",
 ]
 
@@ -228,6 +230,7 @@ STORAGES = {
         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
     },
 }
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # --------------------------------------------------
 # MEDIA FILES
