@@ -41,6 +41,7 @@ def home(request):
                     from_email=settings.DEFAULT_FROM_EMAIL,
                     recipient_list=[settings.EMAIL_HOST_USER], # Sends directly to your email
                     fail_silently=False,
+                    timeout=10,
                 )
                 messages.success(request, "Your message has been sent successfully!")
             except Exception as e:
