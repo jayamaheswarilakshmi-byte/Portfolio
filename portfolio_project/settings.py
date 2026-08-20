@@ -252,14 +252,16 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # --------------------------------------------------
 # EMAIL CONFIGURATION
 # --------------------------------------------------
-
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
+EMAIL_TIMEOUT = 10  # Stops Gunicorn from timing out with 502
 
-# Read the keys from your .env file
-EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
-EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
+# Read keys from environment variables safely
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER", "jaya.maheswari.lakshmi@gmail.com").strip()
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD", "").strip()
 
-DEFAULT_FROM_EMAIL = 'Jayalakshmi Portfolio <jaya.maheswari.lakshmi@gmail.com>'
+# Match the authenticated Gmail address to avoid silent drops by Gmail
+DEFAULT_FROM_EMAIL = f"Jayalakshmi Portfolio <{EMAIL_HOST_USER}>"
