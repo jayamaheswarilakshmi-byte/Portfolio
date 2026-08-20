@@ -7,6 +7,8 @@ from django.core.mail import send_mail
 from django.conf import settings
 from google import genai
 from .models import Profile, Skill, Experience, Service, Project, ContactMessage
+from django.http import HttpResponse
+from django.core.mail import send_mail
 
 def home(request):
     if request.method == 'POST':
@@ -92,3 +94,15 @@ def ai_chat_api(request):
             return JsonResponse({"reply": f"Error: {str(e)}"}, status=500)
             
     return JsonResponse({"reply": "Invalid request method."}, status=405)
+def test_email_view(request):
+    try:
+        send_mail(
+            subject="Render Live SMTP Test",
+            message="This is a test email sent directly from a test URL.",
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[settings.EMAIL_HOST_USER],
+            fail_silently=False,
+        )
+        return HttpResponse(f"<h1>Success! Email sent to {settings.EMAIL_HOST_USER}</h1>")
+    except Exception as e:
+        return HttpResponse(f"<h1>Email Failed!</h1><p><b>Error Details:</b> {e}</p>")
