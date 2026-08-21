@@ -74,13 +74,26 @@
         }
     </style>
 </head>
-<body class="bg-themeYellow font-sans antialiased min-h-screen">
+<body class="bg-themeYellow font-sans antialiased min-h-screen relative">
 
-    <!-- FIXED LEFT SIDEBAR -->
-    <aside class="fixed top-0 left-0 h-screen w-72 bg-darkSidebar text-white flex flex-col justify-between z-50 overflow-y-auto">
+    <!-- MOBILE TOP HEADER BAR -->
+    <div class="lg:hidden bg-darkSidebar text-white flex items-center justify-between p-4 sticky top-0 z-50 shadow-md">
+        <h1 class="font-bold text-base tracking-wide truncate pr-2">
+            {{ profile.name|default:"Jayalakshmi Subramanian" }}
+        </h1>
+        <button id="mobile-menu-btn" class="text-coral focus:outline-none p-1 text-xl">
+            <i class="fa-solid fa-bars" id="menu-icon"></i>
+        </button>
+    </div>
+
+    <!-- OVERLAY FOR MOBILE MENU BACKDROP -->
+    <div id="sidebar-overlay" class="fixed inset-0 bg-black/60 z-40 hidden lg:hidden transition-opacity"></div>
+
+    <!-- RESPONSIVE SIDEBAR -->
+    <aside id="sidebar" class="fixed top-0 left-0 h-screen w-72 bg-darkSidebar text-white flex flex-col justify-between z-50 overflow-y-auto transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out">
         <div>
             <!-- Profile Image Header -->
-            <div class="w-full h-72 bg-gray-800 overflow-hidden relative">
+            <div class="w-full h-64 lg:h-72 bg-gray-800 overflow-hidden relative">
                 {% if profile and profile.profile_image %}
                     <img src="{{ profile.profile_image.url }}" alt="{{ profile.name }}" class="w-full h-full object-cover">
                 {% else %}
@@ -92,28 +105,28 @@
 
             <!-- Navigation Links -->
             <nav class="text-sm">
-                <a href="#home" class="flex items-center justify-between px-6 py-3.5 border-b border-gray-800 text-coral hover:bg-gray-800 transition">
+                <a href="#home" class="nav-link flex items-center justify-between px-6 py-3.5 border-b border-gray-800 text-coral hover:bg-gray-800 transition">
                     <span>Home</span> <i class="fa-solid fa-house"></i>
                 </a>
-                <a href="#about" class="flex items-center justify-between px-6 py-3.5 border-b border-gray-800 text-gray-300 hover:text-coral hover:bg-gray-800 transition">
+                <a href="#about" class="nav-link flex items-center justify-between px-6 py-3.5 border-b border-gray-800 text-gray-300 hover:text-coral hover:bg-gray-800 transition">
                     <span>About</span> <i class="fa-solid fa-address-card"></i>
                 </a>
-                <a href="#education" class="flex items-center justify-between px-6 py-3.5 border-b border-gray-800 text-gray-300 hover:text-coral hover:bg-gray-800 transition">
+                <a href="#education" class="nav-link flex items-center justify-between px-6 py-3.5 border-b border-gray-800 text-gray-300 hover:text-coral hover:bg-gray-800 transition">
                     <span>Education</span> <i class="fa-solid fa-graduation-cap"></i>
                 </a>
-                <a href="#experience" class="flex items-center justify-between px-6 py-3.5 border-b border-gray-800 text-gray-300 hover:text-coral hover:bg-gray-800 transition">
+                <a href="#experience" class="nav-link flex items-center justify-between px-6 py-3.5 border-b border-gray-800 text-gray-300 hover:text-coral hover:bg-gray-800 transition">
                     <span>Experience</span> <i class="fa-solid fa-star"></i>
                 </a>
-                <a href="#service" class="flex items-center justify-between px-6 py-3.5 border-b border-gray-800 text-gray-300 hover:text-coral hover:bg-gray-800 transition">
+                <a href="#service" class="nav-link flex items-center justify-between px-6 py-3.5 border-b border-gray-800 text-gray-300 hover:text-coral hover:bg-gray-800 transition">
                     <span>Service</span> <i class="fa-solid fa-bars-staggered"></i>
                 </a>
-                <a href="#portfolio" class="flex items-center justify-between px-6 py-3.5 border-b border-gray-800 text-gray-300 hover:text-coral hover:bg-gray-800 transition">
+                <a href="#portfolio" class="nav-link flex items-center justify-between px-6 py-3.5 border-b border-gray-800 text-gray-300 hover:text-coral hover:bg-gray-800 transition">
                     <span>Portfolio</span> <i class="fa-solid fa-briefcase"></i>
                 </a>
-                <a href="#ai-agent" class="flex items-center justify-between px-6 py-3.5 border-b border-gray-800 text-gray-300 hover:text-coral hover:bg-gray-800 transition">
+                <a href="#ai-agent" class="nav-link flex items-center justify-between px-6 py-3.5 border-b border-gray-800 text-gray-300 hover:text-coral hover:bg-gray-800 transition">
                     <span>AI Agent</span> <i class="fa-solid fa-robot"></i>
                 </a>
-                <a href="#contact" class="flex items-center justify-between px-6 py-3.5 border-b border-gray-800 text-gray-300 hover:text-coral hover:bg-gray-800 transition">
+                <a href="#contact" class="nav-link flex items-center justify-between px-6 py-3.5 border-b border-gray-800 text-gray-300 hover:text-coral hover:bg-gray-800 transition">
                     <span>Contact</span> <i class="fa-solid fa-envelope"></i>
                 </a>
             </nav>
@@ -134,29 +147,29 @@
     </aside>
 
     <!-- MAIN SCROLLABLE CONTENT AREA -->
-    <main class="ml-72 p-6 md:p-8 space-y-8 max-w-6xl">
+    <main class="ml-0 lg:ml-72 p-4 sm:p-6 md:p-8 space-y-8 max-w-6xl">
 
         <!-- 1. HERO CARD -->
-        <section id="home" class="bg-white shadow-md p-8 md:p-10 space-y-8">
-            <div class="flex flex-col md:flex-row items-center justify-between gap-6">
-                <div class="space-y-3">
+        <section id="home" class="bg-white shadow-md p-6 sm:p-8 md:p-10 space-y-6 sm:space-y-8">
+            <div class="flex flex-col-reverse md:flex-row items-center justify-between gap-6">
+                <div class="space-y-3 text-center md:text-left w-full">
                     <p class="text-coral font-medium text-lg">I'm</p>
-                    <h1 class="text-4xl md:text-5xl font-extrabold text-gray-800 tracking-tight">
+                    <h1 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-gray-800 tracking-tight">
                         {{ profile.name|default:"Jayalakshmi Subramanian" }}
                     </h1>
-                    <p class="text-gray-500 text-xl font-light h-8 flex items-center">
+                    <p class="text-gray-500 text-lg sm:text-xl font-light h-8 flex items-center justify-center md:justify-start">
                         <span id="typed-designation" class="text-gray-600 font-medium"></span>
                     </p>
                 </div>
                 {% if profile and profile.hero_image %}
-                <div class="w-56 h-64 overflow-hidden shrink-0">
+                <div class="w-40 h-40 sm:w-56 sm:h-64 overflow-hidden shrink-0 rounded-full md:rounded-none">
                     <img src="{{ profile.hero_image.url }}" alt="{{ profile.name }}" class="w-full h-full object-cover">
                 </div>
                 {% endif %}
             </div>
 
             <!-- HERO BUTTONS -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-0 text-white font-semibold pt-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-0 text-white font-semibold pt-4">
                 {% if profile and profile.resume_file %}
                 <a href="{{ profile.resume_file.url }}" target="_blank" class="bg-[#212529] py-3.5 px-6 text-center hover:bg-black transition flex items-center justify-center gap-2">
                     <i class="fa-solid fa-download text-coral"></i> Resume
@@ -173,19 +186,19 @@
         </section>
 
         <!-- 2. ABOUT ME CARD -->
-        <section id="about" class="bg-white shadow-md p-8 md:p-10 space-y-8">
+        <section id="about" class="bg-white shadow-md p-6 sm:p-8 md:p-10 space-y-8">
             <div>
-                <h2 class="text-3xl font-bold text-gray-800">About Me</h2>
+                <h2 class="text-2xl sm:text-3xl font-bold text-gray-800">About Me</h2>
                 <div class="w-12 h-1 bg-coral mt-1 mb-6"></div>
                 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 items-start">
                     {% if profile and profile.about_image %}
-                    <div class="w-full h-64 overflow-hidden shadow-sm">
+                    <div class="w-full h-56 sm:h-64 overflow-hidden shadow-sm">
                         <img src="{{ profile.about_image.url }}" alt="{{ profile.name }}" class="w-full h-full object-cover">
                     </div>
                     {% endif %}
                     
-                    <div class="{% if profile and profile.profile_image %}md:col-span-2{% else %}md:col-span-3{% endif %} space-y-4">
+                    <div class="{% if profile and profile.about_image %}md:col-span-2{% else %}md:col-span-3{% endif %} space-y-4">
                         <p class="text-gray-600 leading-relaxed text-sm md:text-base">
                             {{ profile.about_text|default:"Enthusiastic and detail-oriented Python Full Stack Developer with hands-on training and practical experience in HTML, CSS, JavaScript, Python, Django, React, and SQL. Experienced in developing CRUD-based, database-driven, and responsive web applications with a continuous-learning mindset." }}
                         </p>
@@ -229,9 +242,9 @@
             </div>
         </section>
 
-        <!-- 3. EDUCATION CARD WITH MOTION TIMELINE -->
-        <section id="education" class="timeline-section bg-white shadow-md p-8 md:p-10 space-y-6">
-            <h2 class="text-3xl font-bold text-gray-800">Education</h2>
+        <!-- 3. EDUCATION CARD -->
+        <section id="education" class="timeline-section bg-white shadow-md p-6 sm:p-8 md:p-10 space-y-6">
+            <h2 class="text-2xl sm:text-3xl font-bold text-gray-800">Education</h2>
             <div class="w-12 h-1 bg-coral mb-6"></div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8 relative">
@@ -242,7 +255,7 @@
                     </div>
                     <div class="absolute -left-[5px] top-1.5 w-3 h-3 bg-coral rounded-full shadow-sm"></div>
                     <p class="text-xs text-gray-400">01-Jun-2008 <span class="text-coral italic">to</span> 31-May-2012</p>
-                    <h3 class="text-lg font-bold text-gray-700">B.E. — Computer Science</h3>
+                    <h3 class="text-base sm:text-lg font-bold text-gray-700">B.E. — Computer Science</h3>
                     <p class="text-xs font-semibold text-coral">SCAD College of Engineering and Technology</p>
                     <p class="text-xs text-gray-500 leading-relaxed">Graduated with foundational expertise in core software engineering, data structures, algorithms, and computing fundamentals.</p>
                     <div class="timeline-divider h-[1px] bg-coral mt-4"></div>
@@ -255,7 +268,7 @@
                     </div>
                     <div class="absolute -left-[5px] top-1.5 w-3 h-3 bg-coral rounded-full shadow-sm"></div>
                     <p class="text-xs text-gray-400">06-May-2026 <span class="text-coral italic">to</span> Present</p>
-                    <h3 class="text-lg font-bold text-gray-700">Python Full Stack</h3>
+                    <h3 class="text-base sm:text-lg font-bold text-gray-700">Python Full Stack</h3>
                     <p class="text-xs font-semibold text-coral">Vetri Technology Solutions</p>
                     <p class="text-xs text-gray-500 leading-relaxed">Hands-on practical training in Django web development, React integration, REST APIs, and production deployment.</p>
                     <div class="timeline-divider h-[1px] bg-coral mt-4"></div>
@@ -263,9 +276,9 @@
             </div>
         </section>
 
-        <!-- 4. EXPERIENCE CARD WITH MOTION TIMELINE -->
-        <section id="experience" class="timeline-section bg-white shadow-md p-8 md:p-10 space-y-6">
-            <h2 class="text-3xl font-bold text-gray-800">Experience</h2>
+        <!-- 4. EXPERIENCE CARD -->
+        <section id="experience" class="timeline-section bg-white shadow-md p-6 sm:p-8 md:p-10 space-y-6">
+            <h2 class="text-2xl sm:text-3xl font-bold text-gray-800">Experience</h2>
             <div class="w-12 h-1 bg-coral mb-6"></div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8 relative">
@@ -276,7 +289,7 @@
                     </div>
                     <div class="absolute -left-[5px] top-1.5 w-3 h-3 bg-coral rounded-full shadow-sm"></div>
                     <p class="text-xs text-gray-400">Recent <span class="text-coral italic">to</span> Present</p>
-                    <h3 class="text-lg font-bold text-gray-700">Vetri Technology Solutions</h3>
+                    <h3 class="text-base sm:text-lg font-bold text-gray-700">Vetri Technology Solutions</h3>
                     <p class="text-xs italic text-gray-500">Tirunelveli, India</p>
                     <p class="text-xs font-semibold text-gray-800">Python Full Stack Developer Intern</p>
                     <p class="text-xs text-gray-500 leading-relaxed">Developed responsive, database-driven web applications with Django and React. Practiced CRUD modules, models, migrations, and Render deployments.</p>
@@ -290,7 +303,7 @@
                     </div>
                     <div class="absolute -left-[5px] top-1.5 w-3 h-3 bg-coral rounded-full shadow-sm"></div>
                     <p class="text-xs text-gray-400">Prior Role</p>
-                    <h3 class="text-lg font-bold text-gray-700">iTech India Private Limited</h3>
+                    <h3 class="text-base sm:text-lg font-bold text-gray-700">iTech India Private Limited</h3>
                     <p class="text-xs italic text-gray-500">Chennai, India</p>
                     <p class="text-xs font-semibold text-gray-800">Team Lead / Data Entry Operator</p>
                     <p class="text-xs text-gray-500 leading-relaxed">Managed data verification tasks and led a 10-member team supporting task allocation, workflow tracking, and execution.</p>
@@ -300,50 +313,62 @@
         </section>
 
         <!-- 5. SERVICE CARD -->
-        <section id="service" class="bg-white shadow-md p-8 md:p-10 space-y-6">
-            <h2 class="text-3xl font-bold text-gray-800">Service</h2>
+        <section id="service" class="bg-white shadow-md p-6 sm:p-8 md:p-10 space-y-6">
+            <h2 class="text-2xl sm:text-3xl font-bold text-gray-800">Service</h2>
             <div class="w-12 h-1 bg-coral mb-6"></div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8">
                 <div class="space-y-2">
                     <i class="fa-solid fa-desktop text-3xl text-coral"></i>
-                    <h3 class="text-lg font-bold text-gray-700">Web Design</h3>
+                    <h3 class="text-base sm:text-lg font-bold text-gray-700">Web Design</h3>
                     <p class="text-xs text-gray-500 leading-relaxed">Building clean, responsive, and mobile-friendly front-end user interfaces using HTML5, CSS3, Tailwind CSS, and JavaScript.</p>
                 </div>
 
                 <div class="space-y-2">
                     <i class="fa-solid fa-laptop-code text-3xl text-coral"></i>
-                    <h3 class="text-lg font-bold text-gray-700">Web Development</h3>
+                    <h3 class="text-base sm:text-lg font-bold text-gray-700">Web Development</h3>
                     <p class="text-xs text-gray-500 leading-relaxed">Developing robust backend APIs and database-driven web applications powered by Python, Django, and SQL databases.</p>
                 </div>
 
                 <div class="space-y-2">
                     <i class="fa-solid fa-database text-3xl text-coral"></i>
-                    <h3 class="text-lg font-bold text-gray-700">Database Solutions</h3>
+                    <h3 class="text-base sm:text-lg font-bold text-gray-700">Database Solutions</h3>
                     <p class="text-xs text-gray-500 leading-relaxed">Designing database schemas, complex SQL queries, CRUD modules, authentication workflows, and system integrations.</p>
                 </div>
 
                 <div class="space-y-2">
                     <i class="fa-solid fa-cloud-arrow-up text-3xl text-coral"></i>
-                    <h3 class="text-lg font-bold text-gray-700">Deployment & DevOps</h3>
+                    <h3 class="text-base sm:text-lg font-bold text-gray-700">Deployment & DevOps</h3>
                     <p class="text-xs text-gray-500 leading-relaxed">Managing source control with Git/GitHub, configuring production settings, static assets, and deploying applications on Render.</p>
                 </div>
             </div>
         </section>
 
         <!-- 6. PORTFOLIO CARD -->
-        <section id="portfolio" class="bg-white shadow-md p-8 md:p-10 space-y-6">
-            <h2 class="text-3xl font-bold text-gray-800">Projects</h2>
+        <section id="portfolio" class="bg-white shadow-md p-6 sm:p-8 md:p-10 space-y-6">
+            <h2 class="text-2xl sm:text-3xl font-bold text-gray-800">Projects</h2>
             <div class="w-12 h-1 bg-coral mb-6"></div>
 
-            <div class="flex gap-1 text-xs uppercase tracking-wider font-semibold mb-6 border border-gray-200 inline-flex">
-                <button class="bg-coral text-white px-4 py-2">All</button>
-                <button class="px-4 py-2 text-gray-600 hover:text-coral transition">Django</button>
-                <button class="px-4 py-2 text-gray-600 hover:text-coral transition">React</button>
-                <button class="px-4 py-2 text-gray-600 hover:text-coral transition">SQL</button>
+            <div class="flex flex-wrap gap-1 text-xs uppercase tracking-wider font-semibold mb-6 border border-gray-200 inline-flex">
+                <button class="bg-coral text-white px-3 sm:px-4 py-2">All</button>
+                <button class="px-3 sm:px-4 py-2 text-gray-600 hover:text-coral transition">Django</button>
+                <button class="px-3 sm:px-4 py-2 text-gray-600 hover:text-coral transition">React</button>
+                <button class="px-3 sm:px-4 py-2 text-gray-600 hover:text-coral transition">AI / SQL</button>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                <!-- PROJECT: AI E-Commerce Shopping Assistant -->
+                <div class="border border-gray-200 p-4 space-y-2 hover:border-coral transition relative flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between">
+                            <h3 class="font-bold text-gray-800 text-sm">AI E-Commerce Shopping Assistant</h3>
+                            <span class="text-[10px] bg-coral/10 text-coral font-bold px-1.5 py-0.5 rounded">NEW</span>
+                        </div>
+                        <p class="text-xs text-coral font-medium">Django, React & AI Chatbot</p>
+                        <p class="text-xs text-gray-500 mt-2">Intelligent shopping bot providing automated product recommendations and customer support querying.</p>
+                    </div>
+                </div>
+
                 <div class="border border-gray-200 p-4 space-y-2 hover:border-coral transition">
                     <h3 class="font-bold text-gray-800 text-sm">eCommerce / Food Flow</h3>
                     <p class="text-xs text-coral font-medium">Django & React</p>
@@ -364,44 +389,44 @@
             </div>
         </section>
 
-        <!-- AI AGENT SECTION -->
-<section id="ai-agent" class="bg-white shadow-md p-8 md:p-10 space-y-6 border-l-4 border-coral">
-    <!-- Header with Avatar -->
-    <div class="flex items-center space-x-4">
-        {% if profile and profile.profile_image %}
-        <img id="avatar-img" src="{{ profile.profile_image.url }}" alt="AI Avatar" class="w-16 h-16 rounded-full border-2 border-coral animate-pulse cursor-pointer object-cover" onclick="speakText('Please place your question here.')">
-        {% else %}
-        <img id="avatar-img" src="https://via.placeholder.com/150" alt="AI Avatar" class="w-16 h-16 rounded-full border-2 border-coral animate-pulse cursor-pointer object-cover" onclick="speakText('Please place your question here.')">
-{% endif %}
-        <div>
-            <h2 class="text-3xl font-bold text-gray-800">Ask My AI Agent</h2>
-            <p id="ai-instruction" class="text-xs text-coral font-semibold mt-1">Click the mic or speak your question!</p>
-        </div>
-    </div>
+        <!-- 7. AI AGENT SECTION -->
+        <section id="ai-agent" class="bg-white shadow-md p-6 sm:p-8 md:p-10 space-y-6 border-l-4 border-coral">
+            <!-- Header with Avatar -->
+            <div class="flex items-center space-x-4">
+                {% if profile and profile.profile_image %}
+                <img id="avatar-img" src="{{ profile.profile_image.url }}" alt="AI Avatar" class="w-12 h-12 sm:w-16 sm:h-16 rounded-full border-2 border-coral animate-pulse cursor-pointer object-cover shrink-0" onclick="speakText('Please place your question here.')">
+                {% else %}
+                <img id="avatar-img" src="https://via.placeholder.com/150" alt="AI Avatar" class="w-12 h-12 sm:w-16 sm:h-16 rounded-full border-2 border-coral animate-pulse cursor-pointer object-cover shrink-0" onclick="speakText('Please place your question here.')">
+                {% endif %}
+                <div>
+                    <h2 class="text-2xl sm:text-3xl font-bold text-gray-800">Ask My AI Agent</h2>
+                    <p id="ai-instruction" class="text-xs text-coral font-semibold mt-1">Click the mic or speak your question!</p>
+                </div>
+            </div>
 
-    <!-- Text Input -->
-    <textarea id="user-input" rows="3" placeholder="e.g., What experience does Jayalakshmi have with Django and React?" class="w-full text-sm p-3 border border-gray-300 rounded-sm focus:outline-none focus:border-coral resize-none" required></textarea>
+            <!-- Text Input -->
+            <textarea id="user-input" rows="3" placeholder="e.g., What experience does Jayalakshmi have with Django and React?" class="w-full text-sm p-3 border border-gray-300 rounded-sm focus:outline-none focus:border-coral resize-none" required></textarea>
 
-    <!-- Controls (Orange / Coral Theme) -->
-    <div class="flex items-center gap-3">
-        <button id="mic-btn" type="button" class="flex items-center gap-2 bg-coral/10 text-coral border border-coral/30 px-5 py-2.5 rounded-sm hover:bg-coral/20 transition text-xs font-semibold">
-            <span id="mic-icon">🎙️</span> <span id="mic-text">Speak</span>
-        </button>
-        <button id="send-btn" type="button" class="flex-1 bg-coral text-white py-2.5 px-6 font-semibold text-xs rounded-sm hover:opacity-90 transition flex items-center justify-center gap-2">
-            <i class="fa-solid fa-paper-plane"></i> Ask AI
-        </button>
-    </div>
+            <!-- Controls -->
+            <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+                <button id="mic-btn" type="button" class="flex items-center justify-center gap-2 bg-coral/10 text-coral border border-coral/30 px-5 py-2.5 rounded-sm hover:bg-coral/20 transition text-xs font-semibold">
+                    <span id="mic-icon">🎙️</span> <span id="mic-text">Speak</span>
+                </button>
+                <button id="send-btn" type="button" class="flex-1 bg-coral text-white py-2.5 px-6 font-semibold text-xs rounded-sm hover:opacity-90 transition flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-paper-plane"></i> Ask AI
+                </button>
+            </div>
 
-    <!-- AI Output Box -->
-    <div id="ai-response-box" class="hidden p-4 bg-gray-50 border border-gray-200 rounded-sm text-xs text-gray-700">
-        <strong class="text-gray-900 uppercase tracking-wider text-[10px]">AI Response:</strong>
-        <p id="ai-response-text" class="mt-1 leading-relaxed text-gray-800">Waiting for your question...</p>
-    </div>
-</section>
+            <!-- AI Output Box -->
+            <div id="ai-response-box" class="hidden p-4 bg-gray-50 border border-gray-200 rounded-sm text-xs text-gray-700">
+                <strong class="text-gray-900 uppercase tracking-wider text-[10px]">AI Response:</strong>
+                <p id="ai-response-text" class="mt-1 leading-relaxed text-gray-800">Waiting for your question...</p>
+            </div>
+        </section>
 
         <!-- 8. CONTACT CARD -->
-        <section id="contact" class="bg-white shadow-md p-8 md:p-10 space-y-6">
-            <h2 class="text-3xl font-bold text-gray-800">Contact</h2>
+        <section id="contact" class="bg-white shadow-md p-6 sm:p-8 md:p-10 space-y-6">
+            <h2 class="text-2xl sm:text-3xl font-bold text-gray-800">Contact</h2>
             <div class="w-12 h-1 bg-coral mb-6"></div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -416,7 +441,7 @@
                     </div>
                     <div class="flex items-center gap-3">
                         <i class="fa-solid fa-envelope text-coral w-4"></i>
-                        <a href="mailto:{{ profile.email|default:'jaya.maheswari.lakshmi@gmail.com' }}" class="hover:underline">
+                        <a href="mailto:{{ profile.email|default:'jaya.maheswari.lakshmi@gmail.com' }}" class="hover:underline break-all">
                             {{ profile.email|default:"jaya.maheswari.lakshmi@gmail.com" }}
                         </a>
                     </div>
@@ -438,33 +463,68 @@
                         </a>
                     </div>
                 </div>
-<form id="contact-form" method="POST" action="{% url 'home' %}" class="space-y-3">
-    {% csrf_token %}
-    <div class="grid grid-cols-2 gap-3">
-        <input type="text" name="name" placeholder="Your Name" class="border border-gray-300 p-2.5 text-xs w-full focus:outline-none focus:border-coral" required>
-        <input type="email" name="email" placeholder="Your Email" class="border border-gray-300 p-2.5 text-xs w-full focus:outline-none focus:border-coral" required>
-    </div>
-    <input type="text" name="subject" placeholder="Subject" class="border border-gray-300 p-2.5 text-xs w-full focus:outline-none focus:border-coral" required>
-    <textarea name="message" rows="4" placeholder="Message" class="border border-gray-300 p-2.5 text-xs w-full focus:outline-none focus:border-coral resize-none" required></textarea>
-    <button type="submit" id="submit-btn" class="bg-coral text-white px-6 py-2.5 text-xs font-semibold hover:opacity-90 transition">
-        Send Message
-    </button>
-    
-    <!-- Status message output container -->
-    <p id="form-status" class="text-xs font-medium hidden mt-2"></p>
-</form>
+                <form id="contact-form" method="POST" action="{% url 'home' %}" class="space-y-3">
+                    {% csrf_token %}
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <input type="text" name="name" placeholder="Your Name" class="border border-gray-300 p-2.5 text-xs w-full focus:outline-none focus:border-coral" required>
+                        <input type="email" name="email" placeholder="Your Email" class="border border-gray-300 p-2.5 text-xs w-full focus:outline-none focus:border-coral" required>
+                    </div>
+                    <input type="text" name="subject" placeholder="Subject" class="border border-gray-300 p-2.5 text-xs w-full focus:outline-none focus:border-coral" required>
+                    <textarea name="message" rows="4" placeholder="Message" class="border border-gray-300 p-2.5 text-xs w-full focus:outline-none focus:border-coral resize-none" required></textarea>
+                    <button type="submit" id="submit-btn" class="w-full sm:w-auto bg-coral text-white px-6 py-2.5 text-xs font-semibold hover:opacity-90 transition">
+                        Send Message
+                    </button>
+                    
+                    <p id="form-status" class="text-xs font-medium hidden mt-2"></p>
+                </form>
+            </div>
         </section>
 
         <!-- FOOTER COPYRIGHT -->
-        <footer class="flex flex-col sm:flex-row justify-between items-center text-xs text-gray-700 py-4 px-2">
+        <footer class="flex flex-col sm:flex-row justify-between items-center text-xs text-gray-700 py-4 px-2 gap-2 text-center sm:text-left">
             <p>© Copyright <span class="text-coral font-bold">Jayalakshmi Subramanian</span>. All Rights Reserved</p>
             <p>Powered by <span class="text-coral font-bold">Django & Tailwind CSS</span></p>
         </footer>
 
     </main>
 
-    <!-- SCRIPTS --><script>
+    <!-- SCRIPTS -->
+    <script>
     document.addEventListener('DOMContentLoaded', function () {
+
+        // -------------------------------------------------------------
+        // 0. Mobile Drawer Navigation Toggle
+        // -------------------------------------------------------------
+        const menuBtn = document.getElementById('mobile-menu-btn');
+        const menuIcon = document.getElementById('menu-icon');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+        const navLinks = document.querySelectorAll('.nav-link');
+
+        function toggleMenu() {
+            sidebar.classList.toggle('-translate-x-full');
+            overlay.classList.toggle('hidden');
+            if (sidebar.classList.contains('-translate-x-full')) {
+                menuIcon.classList.remove('fa-xmark');
+                menuIcon.classList.add('fa-bars');
+            } else {
+                menuIcon.classList.remove('fa-bars');
+                menuIcon.classList.add('fa-xmark');
+            }
+        }
+
+        if (menuBtn && sidebar && overlay) {
+            menuBtn.addEventListener('click', toggleMenu);
+            overlay.addEventListener('click', toggleMenu);
+            navLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    if (window.innerWidth < 1024) {
+                        toggleMenu();
+                    }
+                });
+            });
+        }
+
         // -------------------------------------------------------------
         // 1. Typed.js Animation
         // -------------------------------------------------------------
@@ -505,32 +565,20 @@
         });
 
         // -------------------------------------------------------------
-        // 3. AI Agent Setup & DOM Elements
+        // 3. AI Agent Setup & Speech Synthesis
         // -------------------------------------------------------------
-        const micBtn = document.getElementById('mic-btn');
-        const micIcon = document.getElementById('mic-icon');
-        const micText = document.getElementById('mic-text');
-        const sendBtn = document.getElementById('send-btn') || document.getElementById('ai-btn');
-        const userInput = document.getElementById('user-input') || document.getElementById('ai-query');
-        const responseBox = document.getElementById('ai-response-box');
-        const responseText = document.getElementById('ai-response-text');
         const avatarImg = document.getElementById('avatar-img');
-        const aiForm = document.getElementById('ai-form');
 
-        // -------------------------------------------------------------
-        // 4. Text-to-Speech (Female Voice + Avatar Bounce)
-        // -------------------------------------------------------------
-        function speakText(text) {
+        window.speakText = function(text) {
             if ('speechSynthesis' in window) {
-                window.speechSynthesis.cancel(); // Stop active speech
+                window.speechSynthesis.cancel();
 
                 const utterance = new SpeechSynthesisUtterance(text);
                 utterance.rate = 1.0;
-                utterance.pitch = 1.2; // Slightly higher pitch for female tone
+                utterance.pitch = 1.2;
 
                 const voices = window.speechSynthesis.getVoices();
 
-                // Search for common female voices
                 const femaleVoice = voices.find(voice => 
                     voice.name.includes('Google UK English Female') ||
                     voice.name.includes('Google US English') ||
@@ -568,163 +616,7 @@
                 window.speechSynthesis.speak(utterance);
             }
         }
-
-        // Ensure voices load asynchronously on Chrome/Edge
-        if ('speechSynthesis' in window) {
-            window.speechSynthesis.onvoiceschanged = () => {
-                window.speechSynthesis.getVoices();
-            };
-        }
-
-        // Direct Avatar click trigger
-        if (avatarImg) {
-            avatarImg.addEventListener('click', () => {
-                speakText('Please place your question here.');
-            });
-        }
-
-        // -------------------------------------------------------------
-        // 5. Speech-to-Text (Audio Input)
-        // -------------------------------------------------------------
-        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-
-        if (SpeechRecognition && micBtn) {
-            const recognition = new SpeechRecognition();
-            recognition.continuous = false;
-            recognition.lang = 'en-US';
-
-            micBtn.addEventListener('click', () => {
-                recognition.start();
-            });
-
-            recognition.onstart = () => {
-                if (micIcon) micIcon.innerText = "🔴";
-                if (micText) micText.innerText = "Listening...";
-            };
-
-            recognition.onresult = (event) => {
-                const transcript = event.results[0][0].transcript;
-                if (userInput) userInput.value = transcript;
-                if (micIcon) micIcon.innerText = "🎙️";
-                if (micText) micText.innerText = "Speak";
-                
-                // Automatically send recognized speech
-                sendMessage(transcript);
-            };
-
-            recognition.onerror = () => {
-                if (micIcon) micIcon.innerText = "🎙️";
-                if (micText) micText.innerText = "Speak";
-            };
-
-            recognition.onend = () => {
-                if (micIcon) micIcon.innerText = "🎙️";
-                if (micText) micText.innerText = "Speak";
-            };
-        } else if (micBtn) {
-            micBtn.style.display = 'none';
-        }
-
-        // -------------------------------------------------------------
-        // 6. Unified API Handler (AJAX + CSRF + UI States)
-        // -------------------------------------------------------------
-        async function sendMessage(messageOverride) {
-            const query = messageOverride || (userInput ? userInput.value : '');
-            if (!query.trim()) return;
-
-            if (responseBox) responseBox.classList.remove('hidden');
-            if (responseText) responseText.innerText = "Thinking...";
-
-            let originalBtnHTML = "";
-            if (sendBtn) {
-                sendBtn.disabled = true;
-                originalBtnHTML = sendBtn.innerHTML;
-                sendBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Thinking...';
-            }
-
-            try {
-                const response = await fetch("{% url 'ai_chat_api' %}", {
-                    method: 'POST',
-                    headers: { 
-                        'Content-Type': 'application/json',
-                        'X-CSRFToken': '{{ csrf_token }}'
-                    },
-                    body: JSON.stringify({ message: query })
-                });
-
-                const data = await response.json();
-                const reply = data.reply || data.error || 'Something went wrong.';
-
-                if (responseText) responseText.innerText = reply;
-                speakText(reply);
-
-                if (userInput) userInput.value = '';
-
-            } catch (err) {
-                if (responseText) responseText.innerText = "Error connecting to AI backend.";
-            } finally {
-                if (sendBtn) {
-                    sendBtn.disabled = false;
-                    sendBtn.innerHTML = originalBtnHTML || '<i class="fa-solid fa-paper-plane"></i> Ask AI';
-                }
-            }
-        }
-
-        // Event Listeners for form submission and button click
-        if (aiForm) {
-            aiForm.addEventListener('submit', function (e) {
-                e.preventDefault();
-                sendMessage();
-            });
-        }
-
-        if (sendBtn && !aiForm) {
-            sendBtn.addEventListener('click', () => sendMessage());
-        }
     });
-    document.addEventListener("DOMContentLoaded", () => {
-    const form = document.getElementById("contact-form");
-    const statusText = document.getElementById("form-status");
-    const submitBtn = document.getElementById("submit-btn");
-
-    if (form) {
-        form.addEventListener("submit", async (e) => {
-            // Stop page reload and auto-scroll
-            e.preventDefault();
-
-            submitBtn.disabled = true;
-            submitBtn.innerText = "Sending...";
-            
-            const formData = new FormData(form);
-
-            try {
-                const response = await fetch(form.action, {
-                    method: "POST",
-                    body: formData,
-                    headers: {
-                        "X-Requested-With": "XMLHttpRequest"
-                    }
-                });
-
-                if (response.ok) {
-                    statusText.textContent = "Message sent successfully!";
-                    statusText.className = "text-xs font-medium text-green-600 mt-2";
-                    form.reset();
-                } else {
-                    statusText.textContent = "Failed to send message. Please try again.";
-                    statusText.className = "text-xs font-medium text-red-600 mt-2";
-                }
-            } catch (error) {
-                statusText.textContent = "An error occurred during submission.";
-                statusText.className = "text-xs font-medium text-red-600 mt-2";
-            } finally {
-                statusText.classList.remove("hidden");
-                submitBtn.disabled = false;
-                submitBtn.innerText = "Send Message";
-            }
-        });
-    }
-});
-</script>
+    </script>
 </body>
 </html>
