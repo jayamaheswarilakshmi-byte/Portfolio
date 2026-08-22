@@ -488,7 +488,7 @@
 
     </main>
 
-    <!-- SCRIPTS -->
+ <!-- ALL FRONTEND JAVASCRIPT LOGIC -->
     <script>
     document.addEventListener('DOMContentLoaded', function () {
 
@@ -502,14 +502,16 @@
         const navLinks = document.querySelectorAll('.nav-link');
 
         function toggleMenu() {
-            sidebar.classList.toggle('-translate-x-full');
-            overlay.classList.toggle('hidden');
-            if (sidebar.classList.contains('-translate-x-full')) {
-                menuIcon.classList.remove('fa-xmark');
-                menuIcon.classList.add('fa-bars');
-            } else {
-                menuIcon.classList.remove('fa-bars');
-                menuIcon.classList.add('fa-xmark');
+            if (sidebar && overlay && menuIcon) {
+                sidebar.classList.toggle('-translate-x-full');
+                overlay.classList.toggle('hidden');
+                if (sidebar.classList.contains('-translate-x-full')) {
+                    menuIcon.classList.remove('fa-xmark');
+                    menuIcon.classList.add('fa-bars');
+                } else {
+                    menuIcon.classList.remove('fa-bars');
+                    menuIcon.classList.add('fa-xmark');
+                }
             }
         }
 
@@ -546,7 +548,6 @@
         // 2. Intersection Observer for Scroll Motion Animations
         // -------------------------------------------------------------
         const observerOptions = { threshold: 0.25 };
-
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -565,9 +566,20 @@
         });
 
         // -------------------------------------------------------------
-        // 3. AI Agent Setup & Speech Synthesis
+        // 3. Text-to-Speech (Voice Output)
         // -------------------------------------------------------------
         const avatarImg = document.getElementById('avatar-img');
+        let voices = [];
+
+        function populateVoices() {
+            if ('speechSynthesis' in window) {
+                voices = window.speechSynthesis.getVoices();
+            }
+        }
+        populateVoices();
+        if ('speechSynthesis' in window && window.speechSynthesis.onvoiceschanged !== undefined) {
+            window.speechSynthesis.onvoiceschanged = populateVoices;
+        }
 
         window.speakText = function(text) {
             if ('speechSynthesis' in window) {
@@ -577,9 +589,8 @@
                 utterance.rate = 1.0;
                 utterance.pitch = 1.2;
 
-                const voices = window.speechSynthesis.getVoices();
-
-                const femaleVoice = voices.find(voice => 
+                const availableVoices = voices.length ? voices : window.speechSynthesis.getVoices();
+                const femaleVoice = availableVoices.find(voice => 
                     voice.name.includes('Google UK English Female') ||
                     voice.name.includes('Google US English') ||
                     voice.name.includes('Samantha') ||
@@ -615,6 +626,116 @@
 
                 window.speechSynthesis.speak(utterance);
             }
+        };
+
+        // -------------------------------------------------------------
+        // 4. Speech Recognition (Microphone Input)
+        // -------------------------------------------------------------
+        const micBtn = document.getElementById('mic-btn');
+        const micIcon = document.getElementById('mic-icon');
+        const micText = document.getElementById('mic-text');
+        const userInput = document.getElementById('user-input');
+
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+        if (SpeechRecognition && micBtn) {
+            const recognition = new SpeechRecognition();
+            recognition.continuous = false;
+            recognition.interimResults = false;
+            recognition.lang = 'en-US';
+
+            micBtn.addEventListener('click', () => {
+                try {
+                    recognition.start();
+                } catch (e) {
+                    recognition.stop();
+                }
+            });
+
+            recognition.onstart = () => {
+                if (micIcon) micIcon.textContent = '🔴';
+                if (micText) micText.textContent = 'Listening...';
+            };
+
+            recognition.onresult = (event) => {
+                const transcript = event.results[0][0].transcript;
+                if (userInput) userInput.value = transcript;
+                askAIAgent();
+            };
+
+            recognition.onerror = () => resetMicBtn();
+            recognition.onend = () => resetMicBtn();
+
+            function resetMicBtn() {
+                if (micIcon) micIcon.textContent = '🎙️';
+                if (micText) micText.textContent = 'Speak';
+            }
+        } else if (micBtn) {
+            micBtn.style.display = 'none';
+        }
+
+        // -------------------------------------------------------------
+        // 5. AI Agent API Request & UI Handler
+        // -------------------------------------------------------------
+        const sendBtn = document.getElementById('send-btn');
+        const responseBox = document.getElementById('ai-response-box');
+        const responseText = document.getElementById('ai-response-text');
+
+        async function askAIAgent() {
+            if (!userInput || !userInput.value.trim()) return;
+
+            const message = userInput.value.trim();
+
+            if (responseBox) responseBox.classList.remove('hidden');
+            if (responseText) responseText.innerHTML = '<span class="animate-pulse">Thinking...</span>';
+
+            try {
+                const response = await fetch('/api/ai-chat/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCookie('csrftoken')
+                    },
+                    body: JSON.stringify({ message: message })
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.reply) {
+                    if (responseText) responseText.textContent = data.reply;
+                    window.speakText(data.reply);
+                } else {
+                    if (responseText) responseText.textContent = `Error: ${data.reply || 'Failed to process request.'}`;
+                }
+            } catch (err) {
+                console.error('Fetch error:', err);
+                if (responseText) responseText.textContent = 'Server connection failed. Please check your backend status.';
+            }
+        }
+
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        if (sendBtn) sendBtn.addEventListener('click', askAIAgent);
+        if (userInput) {
+            userInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    askAIAgent();
+                }
+            });
         }
     });
     </script>

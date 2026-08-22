@@ -10,6 +10,8 @@ from .models import Profile, Skill, Experience, Service, Project, ContactMessage
 from django.http import HttpResponse
 from django.core.mail import send_mail
 
+from google.genai import types  # <-- Add this line
+
 def home(request):
     if request.method == 'POST':
         name = request.POST.get('name')
@@ -64,7 +66,6 @@ def home(request):
     }
     return render(request, 'index.html', context)
 
-
 @csrf_exempt
 def ai_chat_api(request):
     if request.method == "POST":
@@ -83,14 +84,18 @@ def ai_chat_api(request):
 
             client = genai.Client(api_key=api_key)
             
-            # UPDATE THIS MODEL NAME TO gemini-3.6-flash
+            # Updated to current active model string
             response = client.models.generate_content(
                 model="gemini-3.6-flash",
-                contents=f"{system_prompt}\nUser asked: {user_msg}"
+                contents=user_msg,
+                config=types.GenerateContentConfig(
+                    system_instruction=system_prompt,
+                )
             )
             return JsonResponse({"reply": response.text})
             
         except Exception as e:
+            # Displays exact error if the API call fails
             return JsonResponse({"reply": f"Error: {str(e)}"}, status=500)
             
     return JsonResponse({"reply": "Invalid request method."}, status=405)
